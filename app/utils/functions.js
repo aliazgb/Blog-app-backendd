@@ -44,34 +44,30 @@ function generateToken(user, expiresIn, secret) {
 
 async function setAccessToken(res, user) {
   const cookieOptions = {
-    maxAge: 1000 * 60 * 60 * 24 * 1,
+    maxAge: 1000 * 60 * 60 * 24 * 1, // 1 روز
     httpOnly: true,
     signed: true,
-    sameSite: "Lax",
+    sameSite: process.env.NODE_ENV === "development" ? "Lax" : "None", // cross-site روی production
     secure: process.env.NODE_ENV === "development" ? false : true,
-    domain: process.env.DOMAIN,
+    path: "/",
   };
-  res.cookie(
-    "accessToken",
-    await generateToken(user, "1d", process.env.ACCESS_TOKEN_SECRET_KEY),
-    cookieOptions
-  );
+
+  const token = await generateToken(user, "1d", process.env.ACCESS_TOKEN_SECRET_KEY);
+  res.cookie("accessToken", token, cookieOptions);
 }
 
 async function setRefreshToken(res, user) {
   const cookieOptions = {
-    maxAge: 1000 * 60 * 60 * 24 * 365,
+    maxAge: 1000 * 60 * 60 * 24 * 365, // 1 سال
     httpOnly: true,
     signed: true,
-    sameSite: "Lax",
+    sameSite: process.env.NODE_ENV === "development" ? "Lax" : "None",
     secure: process.env.NODE_ENV === "development" ? false : true,
-    domain: process.env.DOMAIN,
+    path: "/",
   };
-  res.cookie(
-    "refreshToken",
-    await generateToken(user, "1y", process.env.REFRESH_TOKEN_SECRET_KEY),
-    cookieOptions
-  );
+
+  const token = await generateToken(user, "1y", process.env.REFRESH_TOKEN_SECRET_KEY);
+  res.cookie("refreshToken", token, cookieOptions);
 }
 
 function VerifyRefreshToken(req) {
