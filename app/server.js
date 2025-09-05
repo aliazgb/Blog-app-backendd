@@ -49,9 +49,18 @@ class Application {
   }
 
   configServer() {
-    this.#app.use(
-      cors({ credentials: true, origin: process.env.ALLOW_CORS_ORIGIN })
-    );
+    // تنظیم CORS قبل از هر روت
+    const corsOptions = {
+      origin: [
+        "http://localhost:3000", // برای توسعه لوکال
+        "https://blog-app.online", // فرانت روی Render
+      ],
+      credentials: true, // اجازه ارسال کوکی‌ها
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    };
+
+    this.#app.use(cors(corsOptions));
     this.#app.use(express.json());
     this.#app.use(express.urlencoded({ extended: true }));
     this.#app.use(express.static(path.join(__dirname, "..")));
