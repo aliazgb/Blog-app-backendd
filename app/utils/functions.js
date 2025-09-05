@@ -43,28 +43,28 @@ function generateToken(user, expiresIn, secret) {
 }
 
 async function setAccessToken(res, user) {
-const cookieOptions = {
-  maxAge: 1000 * 60 * 60 * 24 * 365, 
-  httpOnly: true,
-  signed: true,
-  sameSite: "None",
-  secure: true,
-};
-
+  const cookieOptions = {
+    maxAge: 1000 * 60 * 60 * 24 * 365, 
+    httpOnly: true,
+    signed: true,
+    sameSite: "None",   
+    secure: true,       
+    domain: ".blog-app.online", 
+  };
 
   const token = await generateToken(user, "1d", process.env.ACCESS_TOKEN_SECRET_KEY);
   res.cookie("accessToken", token, cookieOptions);
 }
 
 async function setRefreshToken(res, user) {
-const cookieOptions = {
-  maxAge: 1000 * 60 * 60 * 24 * 365, 
-  httpOnly: true,
-  signed: true,
-  sameSite: "None",
-  secure: true,
-};
-
+  const cookieOptions = {
+    maxAge: 1000 * 60 * 60 * 24 * 365, 
+    httpOnly: true,
+    signed: true,
+    sameSite: "None",   
+    secure: true,       
+    domain: ".blog-app.online", 
+  };
 
   const token = await generateToken(user, "1y", process.env.REFRESH_TOKEN_SECRET_KEY);
   res.cookie("refreshToken", token, cookieOptions);
